@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tugas Basis Data: Instalasi MySQL & Konsep ERD</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        line-height: 1.7;
+        background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
+        color: #4a4a4a;
+        padding: 20px 0;
+      }
+      header {
+        background: linear-gradient(135deg, #ffb6c1 0%, #ff69b4 100%);
+        padding: 40px 20px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(255, 182, 193, 0.3);
+        border-radius: 20px;
+        margin: 0 20px 30px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+      header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 1px,
+          transparent 1px
+        );
+        background-size: 20px 20px;
+        animation: float 20s infinite linear;
+      }
+      @keyframes float {
+        0% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        100% {
+          transform: translate(30px, 30px) rotate(360deg);
+        }
+      }
+      h1 {
+        font-size: 2.5em;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      header p {
+        font-size: 1.1em;
+        font-weight: 300;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .post-card {
+        background: white;
+        margin-bottom: 40px;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(255, 182, 193, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(255, 182, 193, 0.1);
+      }
+      .post-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(255, 182, 193, 0.3);
+      }
+      h2 {
+        color: #ff69b4;
+        font-size: 1.8em;
+        font-weight: 600;
+        margin-bottom: 20px;
+        position: relative;
+      }
+      h2::after {
+        content: "";
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(90deg, #ffb6c1, #ff69b4);
+        margin-top: 10px;
+        border-radius: 2px;
+      }
+      h3 {
+        color: #db7093;
+        font-size: 1.3em;
+        font-weight: 600;
+        margin: 25px 0 15px;
+        padding-left: 10px;
+        border-left: 4px solid #ffb6c1;
+      }
+      p {
+        margin-bottom: 15px;
+        text-align: justify;
+      }
+      iframe {
+        display: block;
+        margin: 25px auto;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease;
+      }
+      iframe:hover {
+        transform: scale(1.02);
+      }
+      ul {
+        background: linear-gradient(135deg, #fff5ee 0%, #fff0f5 100%);
+        padding: 20px;
+        border-radius: 15px;
+        margin: 15px 0;
+        border-left: 5px solid #ffb6c1;
+        list-style: none;
+      }
+      ul li {
+        margin-bottom: 10px;
+        padding-left: 15px;
+        position: relative;
+      }
+      ul li::before {
+        content: "✨";
+        position: absolute;
+        left: 0;
+        color: #ff69b4;
+        font-size: 1.2em;
+      }
+      ul li strong {
+        color: #db7093;
+      }
+      code {
+        background: #ffe4e1;
+        padding: 2px 6px;
+        border-radius: 5px;
+        font-family: "Courier New", monospace;
+        color: #c71585;
+        display: block;
+        margin: 10px 0;
+        padding: 15px;
+        border-left: 4px solid #ffb6c1;
+        white-space: pre-wrap;
+        overflow-x: auto;
+      }
+      a {
+        color: #ff69b4;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+      }
+      a:hover {
+        color: #c71585;
+        text-decoration: underline;
+      }
+      .post-meta {
+        font-style: italic;
+        color: #888;
+        font-size: 0.95em;
+        margin-top: 25px;
+        padding-top: 15px;
+        border-top: 1px dashed #ffb6c1;
+        display: inline-block;
+      }
+      .erd-diagram {
+        background: #fff8f8;
+        padding: 20px;
+        border-radius: 15px;
+        margin: 20px 0;
+        border: 2px solid #ffe4e1;
+        text-align: center;
+        font-family: "Courier New", monospace;
+        white-space: pre-wrap;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .erd-image-placeholder {
+        width: 100%;
+        max-width: 600px;
+        height: 300px;
+        background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+        border-radius: 10px;
+        margin: 20px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+      }
+      footer {
+        text-align: center;
+        padding: 30px 20px;
+        background: linear-gradient(135deg, #ffb6c1 0%, #ff69b4 100%);
+        color: white;
+        margin-top: 50px;
+        border-radius: 20px;
+        box-shadow: 0 -8px 25px rgba(255, 182, 193, 0.3);
+        font-weight: 300;
+      }
+      .references {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin: 20px 0;
+        box-shadow: 0 5px 15px rgba(255, 182, 193, 0.2);
+      }
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2em;
+        }
+        .post-card {
+          padding: 20px;
+          margin-bottom: 20px;
+        }
+        iframe {
+          width: 100%;
+          height: 250px;
+        }
+        header {
+          margin: 0 10px 20px;
+          padding: 30px 15px;
+        }
+        code {
+          font-size: 0.9em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Tugas Basis Data: Instalasi MySQL & Konsep ERD</h1>
+      <p>
+        Blog ini membahas tentang instalasi Database Management System (DBMS)
+        MySQL serta konsep dasar Entity-Relationship Diagram (ERD), termasuk
+        implementasinya. Dibuat untuk mata kuliah Basis Data. 🌸
+      </p>
+    </header>
+
+    <div class="container">
+      <!-- Pendahuluan -->
+      <article class="post-card">
+        <h2>Pendahuluan</h2>
+        <p>
+          Database merupakan fondasi utama dalam pengelolaan data modern. Dalam
+          tugas ini, saya akan menjelaskan cara menginstal MySQL sebagai DBMS
+          relasional, memahami elemen kunci ERD (Entitas, Atribut, Relasi), dan
+          bagaimana menerjemahkannya menjadi skema database nyata. Contoh kasus:
+          Sistem Perpustakaan Sederhana.
+        </p>
+        <p>
+          Tujuan tugas: Mempraktikkan instalasi DBMS dan desain database
+          menggunakan ERD untuk efisiensi data.
+        </p>
+        <div class="post-meta">
+          Dibuat oleh: Dea Nurlaela | NIM: 1018 | Kelas: IF24E
+        </div>
+      </article>
+
+      <!-- Post 1: Instalasi MySQL -->
+      <article class="post-card">
+        <h2>Post 1: Tata Cara Instalasi DBMS MySQL</h2>
+        <p>
+          MySQL adalah DBMS open-source yang populer untuk aplikasi web.
+          Instalasi dilakukan di MacOs. Ikuti video tutorial di bawah untuk
+          panduan visual.
+        </p>
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/Nti2ihWdDdI"
+          title="Cara Instalasi MySQL di MacOs"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+        <h3>Ringkasan Langkah Instalasi:</h3>
+        <ul>
+          <li>
+            <strong>Download</strong>: Dari
+            <a href="https://dev.mysql.com/downloads/installer/" target="_blank"
+              >mysql.com/downloads</a
+            >.
+          </li>
+          <li>
+            <strong>Instalasi</strong>: Pilih "Developer Default", set root
+            password.
+          </li>
+          <li>
+            <strong>Verifikasi</strong>: Jalankan
+            <code>mysql -u root -p</code> dan <code>SHOW DATABASES;</code>.
+          </li>
+          <li><strong>Troubleshooting</strong>: Cek port 3306 dan firewall.</li>
+        </ul>
+        <div class="post-meta">
+          Diposting: 6 Oktober 2025 | Kategori: Tutorial
+        </div>
+      </article>
+
+      <!-- Post 2: ERD -->
+      <article class="post-card">
+        <h2>Post 2: Apa Itu Attribute, Entitas, dan Relasi dalam ERD?</h2>
+        <p>
+          ERD adalah model visual untuk desain database. Elemen kunci: Entitas
+          (objek), Atribut (properti), Relasi (hubungan).
+        </p>
+
+        <h3>1. Entitas (Entity)</h3>
+        <p>
+          Objek utama, digambarkan sebagai rectangle. Contoh: "Mahasiswa" dan
+          "Buku". Jenis: Strong (mandiri) vs Weak (bergantung).
+        </p>
+
+        <h3>2. Atribut (Attribute)</h3>
+        <p>
+          Properti entitas, digambarkan sebagai oval. Contoh: NIM (primary key),
+          Nama. Jenis: Simple, Composite, Multivalued, Derived.
+        </p>
+
+        <h3>3. Relasi (Relationship)</h3>
+        <p>
+          Hubungan antar entitas, digambarkan sebagai diamond. Kardinalitas:
+          1:1, 1:N, M:N. Contoh: "Meminjam" (M:N).
+        </p>
+
+        <h3>Contoh Diagram ERD (Sistem Perpustakaan)</h3>
+          <img
+            src="Gambar.png"
+            alt="Diagram ERD"
+            style="
+              width: 60%;
+              display: block;
+              margin: auto;
+              border-radius: 15px;
+            "
+          />
+        </div>
+
+        <div class="erd-diagram">
+          Mahasiswa (Entitas) Relasi Buku (Entitas) +----------------+
+          +----------+ +--------+ | NIM (PK) |<--Meminjam-->| |<--M:N-->| ISBN
+          (PK)| | Nama | | (Diamond) | | Judul | | Jurusan | +----------+
+          +--------+ +----------------+ Atribut: Oval
+        </div>
+          <p>
+             Diagram ini menunjukkan relasi many-to-many yang butuh tabel perantara. note: Tanda “1” dan “*” dalam diagram ERD itu menunjukkan kardinalitas (cardinality) yaitu berapa banyak entitas yang bisa terhubung dalam suatu relasi.
+          </p>
+        <div class="post-meta">
+          Diposting: 5 Oktober 2025 | Kategori: Konsep ERD
+        </div>
+      </article>
+
+      <!-- Post 3: Implementasi ERD ke MySQL -->
+      <article class="post-card">
+        <h2>Post 3: Implementasi ERD ke Skema Database MySQL</h2>
+        <p>
+          Setelah desain ERD, implementasikan ke MySQL: Entitas → Tabel, Atribut
+          → Kolom, Relasi → Foreign Key. Contoh untuk sistem perpustakaan.
+        </p>
+        <h3>SQL Query untuk Implementasi:</h3>
+        <code>
+          -- Buat Database CREATE DATABASE Perpustakaan; USE Perpustakaan; --
+          Tabel Mahasiswa (dari Entitas) CREATE TABLE Mahasiswa ( NIM
+          VARCHAR(10) PRIMARY KEY, Nama VARCHAR(100) NOT NULL, Jurusan
+          VARCHAR(50) ); -- Tabel Buku (dari Entitas) CREATE TABLE Buku ( ISBN
+          VARCHAR(13) PRIMARY KEY, Judul VARCHAR(200) NOT NULL ); -- Tabel
+          Peminjaman (dari Relasi M:N) CREATE TABLE Peminjaman ( ID_Peminjaman
+          INT AUTO_INCREMENT PRIMARY KEY, NIM VARCHAR(10), ISBN VARCHAR(13),
+          Tanggal_Pinjam DATE, FOREIGN KEY (NIM) REFERENCES Mahasiswa(NIM) ON
+          DELETE CASCADE, FOREIGN KEY (ISBN) REFERENCES Buku(ISBN) ON DELETE
+          CASCADE ); -- Contoh Insert Data INSERT INTO Mahasiswa (NIM, Nama,
+          Jurusan) VALUES ('1018', 'Dea', 'Informatika'); INSERT INTO Buku
+          (ISBN, Judul) VALUES ('978-602-8519-99-2', 'Belajar Database dengan MySQL');
+          INSERT INTO Peminjaman (NIM, ISBN, Tanggal_Pinjam) VALUES ('1018',
+          '978-602-8519-99-2', '2025-10-05'); -- Query Test: Tampilkan
+          Peminjaman SELECT m.Nama, b.Judul, p.Tanggal_Pinjam FROM Peminjaman p
+          JOIN Mahasiswa m ON p.NIM = m.NIM JOIN Buku b ON p.ISBN = b.ISBN;
+        </code>
+        <p>
+          Analisis: Implementasi ini memastikan integritas data melalui foreign
+          key, menghindari duplikasi.
+        </p>
+        <div class="post-meta">
+          Diposting: 05 Oktober 2025 | Kategori: Implementasi
+        </div>
+      </article>
+
+      <!-- Kesimpulan -->
+      <article class="post-card">
+        <h2>Kesimpulan</h2>
+        <p>
+          Dari tugas ini, saya menyimpulkan bahwa instalasi MySQL cukup mudah
+          dan ERD sangat esensial untuk merancang database yang efisien. Proses
+          implementasi dari ERD ke skema MySQL membantu memahami bagaimana model
+          konseptual diterjemahkan menjadi struktur fisik yang dapat dijalankan.
+          Kelebihan MySQL termasuk gratis, mudah diskalakan, dan kompatibel
+          dengan banyak aplikasi. 
+        </p>
+        <div class="post-meta
